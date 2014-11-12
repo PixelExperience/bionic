@@ -1521,6 +1521,11 @@ cc_library_static {
         treble: {
             cflags: ["-D__ANDROID_TREBLE__"],
         },
+        aosp: {
+            has_legacy_mmap: {
+                cppflags: ["-DLEGACY_MMAP"],
+            },
+        },
     },
     cppflags: ["-Wold-style-cast"],
     local_include_dirs: ["stdio"],
