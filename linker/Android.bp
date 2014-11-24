@@ -112,6 +112,9 @@ cc_binary {
             target_shim_libs: {
                 cppflags: ["-DLD_SHIM_LIBS=\"%s\""],
             },
+            needs_non_pie_support: {
+                cppflags: ["-DENABLE_NON_PIE_SUPPORT"],
+            },
         },
     },
 
