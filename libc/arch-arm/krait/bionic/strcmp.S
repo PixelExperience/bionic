@@ -57,10 +57,6 @@
         .thumb_func
 #endif
 
-        // To avoid warning about deprecated instructions, add an explicit
-        // arch. The code generated is exactly the same.
-        .arch armv7-a
-
 ENTRY(strcmp)
       /* Use LDRD whenever possible.  */
 
@@ -315,7 +311,6 @@ ENTRY(strcmp)
         beq     .L_miscmp_word_16                 /* If ip == 2.  */
         bge     .L_miscmp_word_24                 /* If ip == 3.  */
         miscmp_word offsetlo=8 offsethi=24        /* If ip == 1.  */
-.L_miscmp_word_16:  miscmp_word offsetlo=16 offsethi=16
 .L_miscmp_word_24:  miscmp_word offsetlo=24 offsethi=8
 
 
@@ -376,4 +371,115 @@ ENTRY(strcmp)
         it      ls
         sbcls   r0, r0, r0
         bx      lr
+
+    /* The code from the previous version of strcmp.S handles this
+     * particular case (the second string is 2 bytes off a word alignment)
+     * faster than any current version. In this very specific case, use the
+     * previous version. See bionic/libc/arch-arm/cortex-a15/bionic/strcmp.S
+     * for the unedited version of this code.
+     */
+.L_miscmp_word_16:
+	wp1 .req r0
+	wp2 .req r1
+	b1  .req r2
+	w1  .req r4
+	w2  .req r5
+	t1  .req ip
+	@ r3 is scratch
+
+    /* At this point, wp1 (r0) has already been word-aligned. */
+2:
+	mov	b1, #1
+	orr	b1, b1, b1, lsl #8
+	orr	b1, b1, b1, lsl #16
+
+	and	t1, wp2, #3
+	bic	wp2, wp2, #3
+	ldr	w1, [wp1], #4
+	ldr	w2, [wp2], #4
+
+	/* Critical inner Loop: Block with 2 bytes initial overlap */
+	.p2align	2
+2:
+	S2HIMEM	t1, w1, #16
+	sub	r3, w1, b1
+	S2LOMEM	t1, t1, #16
+	bic	r3, r3, w1
+	cmp	t1, w2, S2LOMEM #16
+	bne	4f
+	ands	r3, r3, b1, lsl #7
+	it	eq
+	ldreq	w2, [wp2], #4
+	bne	5f
+	eor	t1, t1, w1
+	cmp	t1, w2, S2HIMEM #16
+	bne	6f
+	ldr	w1, [wp1], #4
+	b	2b
+
+5:
+#ifdef __ARMEB__
+	/* The syndrome value may contain false ones if the string ends
+	 * with the bytes 0x01 0x00
+	 */
+	tst	w1, #0xff000000
+	it	ne
+	tstne	w1, #0x00ff0000
+	beq	7f
+#else
+	lsls	r3, r3, #16
+	bne	7f
+#endif
+	ldrh	w2, [wp2]
+	S2LOMEM	t1, w1, #16
+#ifdef __ARMEB__
+	lsl	w2, w2, #16
+#endif
+	b	8f
+
+6:
+	S2HIMEM	w2, w2, #16
+	S2LOMEM	t1, w1, #16
+4:
+	S2LOMEM	w2, w2, #16
+	b	8f
+
+7:
+	mov	r0, #0
+
+    /* Restore registers and stack. */
+    ldrd    r6, r7, [sp]
+    ldrd    r4, r5, [sp, #8]
+    adds    sp, sp, #16
+    .cfi_def_cfa_offset 0
+    .cfi_restore r4
+    .cfi_restore r5
+    .cfi_restore r6
+    .cfi_restore r7
+
+	bx	lr
+
+8:
+	and	r2, t1, #LSB
+	and	r0, w2, #LSB
+	cmp	r0, #1
+	it	cs
+	cmpcs	r0, r2
+	itt	eq
+	S2LOMEMEQ	t1, t1, #8
+	S2LOMEMEQ	w2, w2, #8
+	beq	8b
+	sub	r0, r2, r0
+
+    /* Restore registers and stack. */
+    ldrd    r6, r7, [sp]
+    ldrd    r4, r5, [sp, #8]
+    adds    sp, sp, #16
+    .cfi_def_cfa_offset 0
+    .cfi_restore r4
+    .cfi_restore r5
+    .cfi_restore r6
+    .cfi_restore r7
+
+	bx	lr
 END(strcmp)
