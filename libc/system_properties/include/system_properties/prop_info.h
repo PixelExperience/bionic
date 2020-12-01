@@ -86,4 +86,4 @@ struct prop_info {
   BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(prop_info);
 };
 
-static_assert(sizeof(prop_info) == 96, "sizeof struct prop_info must be 96 bytes");
+static_assert(sizeof(prop_info) == 156, "sizeof struct prop_info must be 156 bytes");
