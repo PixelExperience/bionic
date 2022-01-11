@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5419602b_abbcaaf9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000126
+      },
+      "writtenOn": "2022-01-11T18:48:07Z",
+      "side": 1,
+      "message": "Google switched to Scudo in android 11 to mitigate heap-related attacks [1]. I don\u0027t think the performance gain here is worth sacrificing security, not mentioning that other evaluations I found online may show an advantage of Scudo over jemalloc [2].\n\n[1] https://source.android.com/devices/tech/debug/scudo\n[2] http://expertmiami.blogspot.com/2019/05/what-is-scudo-hardened-allocator_10.html?m\u003d1",
+      "revId": "eb4bef3e199e9ed5e1bbafe5134bd9eeb6a40905",
+      "serverId": "8ba0da3e-d57f-4bbe-ac74-faf358ba962a"
+    }
+  ]
+}
