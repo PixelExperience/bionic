@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73eae770_30bceb1c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000126
+      },
+      "writtenOn": "2023-02-15T15:30:35Z",
+      "side": 1,
+      "message": "Personally I would like to avoid touching bionic as much as we can.",
+      "revId": "11cf696327c875f55e21e8d88a6cc823defa15a5",
+      "serverId": "8ba0da3e-d57f-4bbe-ac74-faf358ba962a"
+    }
+  ]
+}
