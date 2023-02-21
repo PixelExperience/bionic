@@ -16,6 +16,24 @@
       "message": "Personally I would like to avoid touching bionic as much as we can.",
       "revId": "11cf696327c875f55e21e8d88a6cc823defa15a5",
       "serverId": "8ba0da3e-d57f-4bbe-ac74-faf358ba962a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a05afe43_598fc355",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000558
+      },
+      "writtenOn": "2023-02-21T00:10:13Z",
+      "side": 1,
+      "message": "Not sure if it will affect other people negatively yet, but it\u0027s necessary for miui cam support.",
+      "parentUuid": "73eae770_30bceb1c",
+      "revId": "11cf696327c875f55e21e8d88a6cc823defa15a5",
+      "serverId": "8ba0da3e-d57f-4bbe-ac74-faf358ba962a"
     }
   ]
 }
